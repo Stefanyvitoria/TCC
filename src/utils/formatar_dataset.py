@@ -1,9 +1,49 @@
 import sys, os, shutil
 
-def main(path):
+def get_cordenadas(box):
+    cordenadas = []
+    x = y = ''
+    num = 'x'
+    for i in box:
+        if i.isnumeric():
+            if num == 'x':
+                x = (x + i)
+            else:
+                y = (y + i)
+        elif i == ',':
+            num = 'y'
+        elif i == ' ':
+            cordenadas.append((int(x), int(y)))
+            num = 'x'
+            x = y = ''
+        else:
+            continue
+
+    cordenadas.append((int(x), int(y)))
+    return cordenadas
+
+def normalize_coordinates(box):
+    image_width = 1280
+    image_height = 720
+
+    cordenadas  = get_cordenadas(box=box)
+
+    box_x_left = cordenadas[0][0]
+    box_y_top = cordenadas[0][1]
+    box_width = cordenadas[1][0] - box_x_left
+    box_height = cordenadas[2][1] - cordenadas[1][1]
+
+    x_center = (box_x_left + box_width / 2) / image_width
+    y_center = (box_y_top + box_height / 2) / image_height
+    width = box_width / image_width
+    height = box_height / image_height
+    return f'{x_center} {y_center} {width} {height}'
+
+
+def main(path:str):
     
     # diretórios de destino
-    dataset_path = f'{path}/../dataset1'
+    dataset_path = f'{path}/../dataset'
     images_path_train = f'{dataset_path}/images/train'
     label_path_train = f'{dataset_path}/labels/train'
     images_path_val = f'{dataset_path}/images/val'
@@ -54,9 +94,11 @@ def main(path):
         cantos = label_file_dest.readlines()[-1]
         label_file_dest.close()
 
+        normalized_box = normalize_coordinates(cantos[9:])
+
         # escreve os cantos
         label_file_origin = open(f'{destino_label}/{label_name}', 'w')
-        label_file_origin.write(f'0 {cantos[9:]}'.replace(',', '.'))
+        label_file_origin.write(f'0 {normalized_box}')
         label_file_origin.close()
 
 
