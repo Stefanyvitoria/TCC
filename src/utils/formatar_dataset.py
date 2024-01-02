@@ -75,15 +75,14 @@ def main(path:str):
         label_name = img_name.replace('.jpg', '.txt')
 
         # Obtém o tipo de imagem (treinamento, teste ou validação)
-        if img_type == 'training\n':
+        if img_type == 'training\n' or img_type == 'testing\n':
             destino_imagem = images_path_train
             destino_label = label_path_train
         elif img_type == 'validation\n':
             destino_imagem = images_path_val
             destino_label =label_path_val
         else:
-            destino_imagem = images_path_test
-            destino_label = label_path_test
+            continue
 
         # copia a imagem
         imagem_original = f'{path}/images/{line[2]}/{img_name}'
