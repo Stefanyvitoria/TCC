@@ -48,8 +48,6 @@ def main(path:str):
     label_path_train = f'{dataset_path}/labels/train'
     images_path_val = f'{dataset_path}/images/val'
     label_path_val = f'{dataset_path}/labels/val'
-    images_path_test = f'{dataset_path}/images/test'
-    label_path_test = f'{dataset_path}/labels/test'
 
     # Cria os diretórios
     os.mkdir(dataset_path) if not os.path.exists(dataset_path) else None
@@ -57,8 +55,6 @@ def main(path:str):
     os.makedirs(label_path_train) if not os.path.exists(label_path_train) else None
     os.makedirs(images_path_val) if not os.path.exists(images_path_val) else None
     os.makedirs(label_path_val) if not os.path.exists(label_path_val) else None
-    os.makedirs(images_path_test) if not os.path.exists(images_path_test) else None
-    os.makedirs(label_path_test) if not os.path.exists(label_path_test) else None
 
     # Lê arquivo com divisão
     file_split = open(f'{path}/split.txt', 'r')
