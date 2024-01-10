@@ -1,29 +1,36 @@
-# Importações
-from ultralytics import YOLO
-import cv2
+"""
+Autor: @Stefanyvitoria
+Data: 12/2023
+Descrição: Script principal da aplicação. 
+"""
+
+import cv2, time
 
 # Constantes
-ROOT_PATH = '/home/stefany/Documentos/tcc/tcc-rep'
+ROOT_PATH = '/home/pi/Documents/TCC/'
 
+# from picamera import PiCamera
 
-# Carregando Modelo
-model_detector_carros = YOLO('yolov8n.pt') # Detectar Carros (Modelo Pre-treinado)
-model_detector_placas = YOLO(f'{ROOT_PATH}/models/best_detector_placas.pt') # Placas
+# camera = PiCamera()
+# time.sleep(2)
 
-#Carregando vídeo/imagem
-cap = cv2.VideoCapture(f'{ROOT_PATH}/midias/videoplayback.mp4')
+# camera.capture("/home/pi/Documents/TCC/midias/img.jpg")
+# print("Done.")
 
-print("lendo frames")
-# Lendo frames
-ret = True
-frame_num = -1
+import cv2
+import numpy as np
 
-while ret:
-    #Ler frames do vídeo
+cap = cv2.VideoCapture('/dev/video0', cv2.CAP_V4L)
+
+#set dimensions
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 2560)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1440)
+
+while cap.isOpened():
     ret, frame = cap.read()
-
-    if ret and frame_num < 10:
-        # Detectando vartices
-        deteccao = model_detector_carros(frame)[0]
-        print(deteccao)
-    
+    cv2.imwrite('Atharva_Naik.jpg' , frame)
+    cv2.imshow('Video', frame)
+    cv2.waitKey(0)
+       
+cap.release()
+cv2.destroyAllWindows()  
