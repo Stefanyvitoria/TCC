@@ -4,46 +4,39 @@ Data: 12/2023
 Descrição: Script principal da aplicação. 
 """
 
-import cv2, time
-
-from sort.sort import *
+from PIL import Image, ImageDraw
+from ultralytics import YOLO
 
 # Constantes
 ROOT_PATH = '/mnt/sda1/stefany/tcc/tcc-rep'
 
-mot_tracker = Sort()
+def draw_bounding_box(image_path, coordinates):
+    # Open image
+    image = Image.open(image_path)
+
+    # Create a draw object
+    draw = ImageDraw.Draw(image)
+
+    # Draw bounding box
+    draw.rectangle(coordinates, outline='red')
+
+    # Save the image
+    image.save('/mnt/sda1/stefany/tcc/tcc-rep/midias/output.jpg')
 
 # Carregando Modelo
-model_detector_carros = YOLO('yolov8n.pt') # Detectar Carros (Modelo Pre-treinado)
 model_detector_placas = YOLO(f'{ROOT_PATH}/detect/train-100/weights/best.pt') # Placas
 
+# Caminho para a imagem que você deseja analisar
+# img_path = "/mnt/sda1/stefany/tcc/tcc-rep/midias/img_000001.jpg"
+img_path = "/mnt/sda1/stefany/tcc/tcc-rep/midias/carro.jpeg"
 
-veiculos = [2,3,5,7]
+# Carrega a imagem
+img = Image.open(img_path)
 
-# Lendo frames
-frame_num = -1
-ret = True
+# Detecta as placas na imagem
+results = model_detector_placas(img)[0]
 
-while ret:
+# Desenha uma caixa em torno da placa detectada
+cordenadas = results.boxes.data.tolist()[0][0:4]
 
-    frame_num += 1
-
-    #Ler frames do vídeo
-    ret, frame = cap.read()
-
-    if ret and frame_num < 10:
-        # Detectando vartices
-        deteccoes = model_detector_carros(frame)[0]
-        # print(deteccao)
-        deteccoes_ = []
-
-        for deteccao in deteccoes.boxes.data.tolist():
-            x1, y1, x2, y2, score, class_id = deteccao
-            if int(class_id) in veiculos:
-                deteccoes_.append([x1, y1, x2, y2, score])
-
-
-        # rastreia os veiculos
-        track_ids = mot_tracker.update(np.asarray(deteccoes_))
-
-        print(track_ids)
+draw_bounding_box(img_path, cordenadas)
