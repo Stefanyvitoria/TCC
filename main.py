@@ -35,8 +35,8 @@ draw_bounding_box(img_path, cordenadas)
 
 img_cut_path = image_cut(img_path=img_path, cordenadas=cordenadas)
 
-print(f'easyocr= {get_txt(img_cut_path)}')
-print(f'pytesseract= {get_txt_tessereact(img_cut_path)}')
-print(f'ocropus= {get_txt_pyocr(img_cut_path)}')
-print(f'tessereact_plus= {get_txt_tessereact_plus(img_cut_path)}')
-
+# print(f'easyocr= {get_txt(img_cut_path)}')
+# print(f'pytesseract= {get_txt_tessereact(img_cut_path)}')
+# print(f'ocropus= {get_txt_pyocr(img_cut_path)}')
+# print(f'tessereact_plus= {get_txt_tessereact_plus(img_cut_path)}')
+# teste()

@@ -13,8 +13,6 @@ import pyocr.builders
 import pytesseract , cv2
 
 
-def get_txt_tessereact_plus(img_path):
-    pass
 
 
 def get_txt_pyocr(img_path):
@@ -86,7 +84,7 @@ def get_txt(img_cut_path):
 
 
 
-def image_cut(img_path,cordenadas: list, area_aumentada=0):
+def image_cut(img_path,cordenadas: list, area_aumentada_w=0, area_aumentada_h=0):
     # Leia a imagem
     imagem = cv2.imread(img_path)
 
@@ -95,7 +93,7 @@ def image_cut(img_path,cordenadas: list, area_aumentada=0):
 
     # Corte a imagem para incluir apenas a área desejada -
     # as somas e subtrações são pra permitir uma margem de distorção da placa
-    area_desejada = imagem[int(y-area_aumentada):int(h+area_aumentada), int(x-area_aumentada):int(w+area_aumentada)]
+    area_desejada = imagem[int(y+10):int(h), int(x+5):int(w-5)]
 
     img_path_cut = "/".join(img_path.split("/")[:-1])
     # Salve a área desejada como uma nova imagem
@@ -116,3 +114,89 @@ def draw_bounding_box(image_path, coordinates):
 
     # Save the image
     image.save('/mnt/sda1/stefany/tcc/tcc-rep/midias/output.png')
+
+
+
+def get_txt_tessereact_plus(img_path):
+    # Carregando a imagem
+    imagem_path = f'{img_path}/imagecut.png'  # Substitua pelo caminho da sua imagem
+    imagem = cv2.imread(imagem_path)
+
+    # Verificando se a imagem foi carregada corretamente
+    if imagem is None:
+        print("Erro ao carregar a imagem.")
+    else:
+        print("Imagem carregada com sucesso.")
+
+    # PRE PROCESSAMENTO
+
+    # Convertendo a imagem para escala de cinza
+    imagem_cinza = cv2.cvtColor(imagem, cv2.COLOR_BGR2GRAY)
+
+    # Aplicando binarização (thresholding)
+    _, imagem_binaria = cv2.threshold(imagem_cinza, 90, 255, cv2.THRESH_BINARY)
+
+    # img = cv2.imread(imagem_path, cv2.IMREAD_GRAYSCALE)
+    # # img = cv2.medianBlur(img,5)
+    # imagem_processada = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,11,2)
+
+    # Aplicando um filtro para remover ruídos (opcional)
+    imagem_sem_ruido = cv2.medianBlur(imagem_binaria, 1)
+
+    imagem_processada = imagem_sem_ruido
+
+    # # Ajustando o contraste (opcional)
+    # alpha = 1.5  # Fator de contraste
+    # beta = 50    # Fator de brilho
+    # imagem_processada = cv2.convertScaleAbs(imagem_sem_ruido, alpha=alpha, beta=beta)
+
+    # Exibindo a imagem original e a imagem processada
+    cv2.imshow('Imagem Original', imagem)
+    cv2.imshow('Imagem Processada', imagem_processada)
+    cv2.waitKey(0)
+    # input()
+    cv2.destroyAllWindows()
+
+    pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
+    custom_config = r'-c tessedit_char_blacklist=abcdefghijklmnopqrstuvwxyz/ --psm 6'
+    res = pytesseract.image_to_string(imagem_processada,config =custom_config)
+
+    return res
+
+def teste():
+    import cv2 as cv
+    import numpy as np
+    from matplotlib import pyplot as plt
+    img = cv.imread('/mnt/sda1/stefany/tcc/tcc-rep/midias/imagecut.png', cv.IMREAD_GRAYSCALE)
+    # assert img is not None, "file could not be read, check with os.path.exists()"
+    img = cv.medianBlur(img,1)
+    ret,th1 = cv.threshold(img,110,255,cv.THRESH_BINARY)
+    th2 = cv.adaptiveThreshold(img,255,cv.ADAPTIVE_THRESH_MEAN_C,\
+                cv.THRESH_BINARY,11,2)
+    th3 = cv.adaptiveThreshold(img,255,cv.ADAPTIVE_THRESH_GAUSSIAN_C,\
+                cv.THRESH_BINARY,11,2)
+    titles = ['Original Image', 'Global Thresholding (v = 127)',
+                'Adaptive Mean Thresholding', 'Adaptive Gaussian Thresholding']
+    images = [img, th1, th2, th3]
+
+    # pytesseract.pytesseract.tesseract_cmd = '/usr/bin/tesseract'
+    # custom_config = r'-c tessedit_char_blacklist=abcdefghijklmnopqrstuvwxyz/ --psm 6'
+    
+    list_permited = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    # Crie um objeto Reader
+    reader = easyocr.Reader(['pt'], gpu=False)
+    # Leia a imagem da área desejada
+
+    for i in range(4):
+        plt.subplot(2,2,i+1),plt.imshow(images[i],'gray')
+        # res = pytesseract.image_to_string(images[i],config =custom_config)
+        resultados = reader.readtext(images[i], allowlist=list_permited)
+        res = resultados[0][1]
+        plt.title(f'{titles[i]} = {res}')
+        plt.xticks([]),plt.yticks([])
+
+    plt.show()
+
+if __name__ == "__main__":
+    # print(get_txt_tessereact_plus('/mnt/sda1/stefany/tcc/tcc-rep/midias'))
+    teste()
