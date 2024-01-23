@@ -6,23 +6,25 @@ Descrição: Script principal da aplicação.
 
 from ultralytics import YOLO
 from dotenv import load_dotenv
-from src.App import *
+from src.App import App
+import RPi.GPIO as GPIO
 import os
 
 # Carrega as variáveis de ambiente do arquivo .env
 load_dotenv()
 
-# Constantes
-ROOT_PATH = os.getenv('ROOT_PATH')
-MODEL_PATH = os.getenv('MODEL_PATH')
 
+try:
+    # Carregando Modelo de reconhecimento
+    MODEL_FILE = os.getenv('MODEL_FILE')
+    model_detector_placas = YOLO(f'{MODEL_FILE}')
+    App(detector=model_detector_placas)
+    
+except:
+    print("\nResetando canais da GPIO...")
+    GPIO.cleanup() # Desativa possíveis canais ativos
+    print("GPIO Resetada.")
 
-# Carregando Modelo de reconhecimento
-print(MODEL_PATH)
-model_detector_placas = YOLO(f'{MODEL_PATH}')
-
-
-App(detector=model_detector_placas)
 
 # from PIL import Image
 # from src.utils.utils import *
