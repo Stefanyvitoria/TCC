@@ -4,21 +4,11 @@ Data: 12/2023
 Descrição: Script principal da aplicação. 
 """
 
-from ultralytics import YOLO
-from dotenv import load_dotenv
 from src.App import App
 import RPi.GPIO as GPIO
-import os
-
-# Carrega as variáveis de ambiente do arquivo .env
-load_dotenv()
-
 
 try:
-    # Carregando Modelo de reconhecimento
-    MODEL_FILE = os.getenv('MODEL_FILE')
-    model_detector_placas = YOLO(f'{MODEL_FILE}')
-    App(detector=model_detector_placas)
+    App()
     
 except:
     print("\nResetando canais da GPIO...")

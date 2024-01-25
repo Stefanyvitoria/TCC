@@ -1,12 +1,16 @@
 import RPi.GPIO as GPIO
 import time, subprocess, os
 from src.classes.GPIO_PIN import Pin_Button
+from src.classes.Detector import Detector
+from dotenv import load_dotenv
+
+load_dotenv() # Carrega as variáveis de ambiente do arquivo .env
+
 
 class App:
-    def __init__(self, detector) -> None:
-        self.detector_placa = detector
-        self.image_original_path = f"{os.getenv('MIDIAS_PATH')}/imagem-original.png"
-
+    def __init__(self) -> None:
+        self.image_original_path = os.getenv('IMAGEM_ORIGINAL_PATH')
+        self.detector = Detector()
         self.__pins = {
             'button_main': Pin_Button(int(os.getenv('PIN_NUMBER_BUTTON_MAIN'))),
             'led_button_main':Pin_Button(int(os.getenv('PIN_NUMBER_LED_BUTTON_MAIN')))
@@ -26,13 +30,13 @@ class App:
             if GPIO.event_detected(self.__pins['button_main'].number) and (GPIO.input(self.__pins['button_main'].number) == False):
                 
                 print('gatilho disparado!')
-                self.__pins['led_button_main'].desligar()
+                self.__pins['led_button_main'].desligar() #Desliga o led
+                self.__tirar_foto() # Captura a foto
 
-                self.__tirar_foto()
+                print(self.detector.get_text(self.image_original_path))
 
+                input()
 
-
-                # break # ***** TODO - Remover
 
             time.sleep(0.1)
 
