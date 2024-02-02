@@ -33,7 +33,8 @@ class App:
                 self.__pins['led_button_main'].desligar() #Desliga o led
                 self.__tirar_foto() # Captura a foto
 
-                print(self.detector.get_text(self.image_original_path))
+                resultado = self.detector.get_text(self.image_original_path)
+                print(resultado)
 
                 input()
 

@@ -15,10 +15,12 @@ class Detector:
 
         # Carrega a imagem
         img = Image.open(img_path)
+        img.save(f"{os.getenv('MIDIAS_PATH')}/teste.png")
 
         # Detecta as placas na imagem
         results = self.detector_LP(img)[0]
         # print(results)
+        
         if len(results.boxes.data.tolist()) > 0:
             results_data = results.boxes.data.tolist()[0]
             cordenadas = results_data[0:4]

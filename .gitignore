@@ -1,4 +1,6 @@
-midias
+midias/*.png
+midias/*.jpg
 venv
+tcc_env
 .env
 __pycache__

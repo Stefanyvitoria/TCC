@@ -1,0 +1,3 @@
+imagem-original.png -> caminho completo para a imagem original obtida pela câmera.
+imagem-desenhada.png -> imagem original com a marcação da placa 
+imagem-cortada.png -> Imagem recordada só com a região da placa que foi detectada
