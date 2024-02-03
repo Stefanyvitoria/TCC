@@ -9,8 +9,8 @@ import RPi.GPIO as GPIO
 
 try:
     App()
-    
-except Exception as e:
+
+except (Exception, KeyboardInterrupt) as e:
     print(f'Exception capturada:\n{e}')
     
     print("\nResetando canais da GPIO...")

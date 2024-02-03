@@ -20,8 +20,9 @@ class Display:
       
     
     def clean(self):
-        self.device.cleanup()
-        
+        with canvas(self.device) as draw:
+            draw.rectangle(self.device.bounding_box, outline="white", fill="black")
+            draw.text((53, 13), "---", font=self.fonte, fill="white")
 
 if __name__ == '__main__':
 

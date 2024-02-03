@@ -24,6 +24,7 @@ class App:
 
     def run(self) -> None:
 
+        entrada = '' # TODO: Remover
         print("APP inicializado!")
         while True:
             self.__pins['led_button_main'].ligar() # acende o led led de processamento
@@ -40,11 +41,13 @@ class App:
 
                 self.display.set_text(resultado[1])
 
-                input("aperte qualquer tecla para continuar?")
+                entrada = input("aperte qualquer tecla para continuar?")
                 self.display.clean()
 
-
             time.sleep(0.1)
+
+            if entrada == 'fim': # TODO: Remover
+                break
 
         GPIO.cleanup()
         print("APP Finalizado!")
