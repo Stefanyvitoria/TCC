@@ -17,5 +17,16 @@ class Display:
         with canvas(self.device) as draw:
             draw.rectangle(self.device.bounding_box, outline="white", fill="black")
             draw.text((5, 13), text, font=self.fonte, fill="white")
-        sleep(5)
+      
+    
+    def clean(self):
+        self.device.cleanup()
         
+
+if __name__ == '__main__':
+
+    from dotenv import load_dotenv
+    load_dotenv() 
+    
+    disp = Display()
+    disp.set_text("Sem Placas")

@@ -4,3 +4,4 @@ venv
 tcc_env
 .env
 __pycache__
+teste.py

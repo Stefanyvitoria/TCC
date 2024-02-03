@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 import time, subprocess, os
 from src.classes.GPIO_PIN import Pin_Button
 from src.classes.Detector import Detector
+from src.classes.Display import Display
 from dotenv import load_dotenv
 
 load_dotenv() # Carrega as variáveis de ambiente do arquivo .env
@@ -11,6 +12,7 @@ class App:
     def __init__(self) -> None:
         self.image_original_path = os.getenv('IMAGEM_ORIGINAL_PATH')
         self.detector = Detector()
+        self.display = Display()
         self.__pins = {
             'button_main': Pin_Button(int(os.getenv('PIN_NUMBER_BUTTON_MAIN'))),
             'led_button_main':Pin_Button(int(os.getenv('PIN_NUMBER_LED_BUTTON_MAIN')))
@@ -36,7 +38,10 @@ class App:
                 resultado = self.detector.get_text(self.image_original_path)
                 print(resultado)
 
-                input()
+                self.display.set_text(resultado[1])
+
+                input("aperte qualquer tecla para continuar?")
+                self.display.clean()
 
 
             time.sleep(0.1)
