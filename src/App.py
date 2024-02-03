@@ -3,6 +3,7 @@ import time, subprocess, os
 from src.classes.GPIO_PIN import Pin_Button
 from src.classes.Detector import Detector
 from src.classes.Display import Display
+from src.classes.Semaforo import Semaforo
 from dotenv import load_dotenv
 
 load_dotenv() # Carrega as variáveis de ambiente do arquivo .env
@@ -13,6 +14,7 @@ class App:
         self.image_original_path = os.getenv('IMAGEM_ORIGINAL_PATH')
         self.detector = Detector()
         self.display = Display()
+        self.semaforo = Semaforo()
         self.__pins = {
             'button_main': Pin_Button(int(os.getenv('PIN_NUMBER_BUTTON_MAIN'))),
             'led_button_main':Pin_Button(int(os.getenv('PIN_NUMBER_LED_BUTTON_MAIN')))
