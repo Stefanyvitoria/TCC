@@ -11,7 +11,7 @@ try:
     App()
 
 except (Exception, KeyboardInterrupt) as e:
-    print(f'Exception capturada:\n{e}')
+    print(f'\nInterrupção detectada:\n{e}')
     
     print("\nResetando canais da GPIO...")
     GPIO.cleanup() # Desativa possíveis canais ativos

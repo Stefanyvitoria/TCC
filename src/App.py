@@ -30,7 +30,7 @@ class App:
             self.__pins['led_button_main'].ligar() # acende o led led de processamento
     
             # Se houver evento e for uma acionada no botão
-            if GPIO.event_detected(self.__pins['button_main'].number) and (GPIO.input(self.__pins['button_main'].number) == False):
+            if GPIO.wait_for_edge(self.__pins['button_main'].number, GPIO.RISING):
                 
                 print('gatilho disparado!')
                 self.__pins['led_button_main'].desligar() #Desliga o led
