@@ -34,14 +34,14 @@ class App:
             # Se houver evento e for uma acionada no botão
             if GPIO.wait_for_edge(self.__pins['button_main'].number, GPIO.RISING):
                 
-                print('gatilho disparado!')
+                print('\ngatilho disparado!')
                 self.__pins['led_button_main'].desligar() #Desliga o led
                 self.__tirar_foto() # Captura a foto
 
-                resultado = self.detector.get_text(self.image_original_path)
-                print(resultado)
+                classe, resultado_placa = self.detector.get_text(self.image_original_path)
+                print(resultado_placa)
 
-                self.display.set_text(resultado[1])
+                self.display.set_text(resultado_placa)
 
                 entrada = input("aperte qualquer tecla para continuar?")
                 self.display.clean()

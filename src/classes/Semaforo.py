@@ -9,9 +9,9 @@ class Semaforo:
             'rele_4': Pin_Button(int(os.getenv('PIN_NUMBER_RELE_4')),pin_type='out'),
         }
 
-        self.configurar_pinos()
+        self.__configurar_pinos()
 
-    def configurar_pinos(self) -> None:
+    def __configurar_pinos(self) -> None:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.__pins['rele_3'].number, GPIO.OUT)
         GPIO.setup(self.__pins['rele_4'].number, GPIO.OUT)

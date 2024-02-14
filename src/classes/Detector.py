@@ -2,6 +2,7 @@ from ultralytics import YOLO
 from PIL import Image, ImageDraw
 import os, cv2, easyocr
 from matplotlib import pyplot as plt
+from google.cloud import vision
 
 
 class Detector:
@@ -33,19 +34,25 @@ class Detector:
         return (-1, "Sem detecções")
 
     def OCR(self):
-        img = cv2.imread(f'{self.img_cut}', cv2.IMREAD_GRAYSCALE)
-        img = cv2.medianBlur(img,1)
+        client = vision.ImageAnnotatorClient()
 
-        ret,th1 = cv2.threshold(img,110,255,cv2.THRESH_BINARY)
+        with open(self.img_cut, "rb") as image_file:
+            content = image_file.read()
 
-        # Cria um objeto Reader
-        reader = easyocr.Reader(['pt'], gpu=False)
+        image = vision.Image(content=content)
+        response = client.text_detection(image=image)
 
-        list_permited = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        resultados = reader.readtext(th1, allowlist=list_permited)
-        res = resultados[0][1]
+        print(response)
 
-        return res
+        txt = response.full_text_annotation.text
+
+        if response.error.message:
+            raise Exception(
+                "{}\nFor more info on error messages, check: "
+                "https://cloud.google.com/apis/design/errors".format(response.error.message)
+            )
+
+        return txt
 
     def cut_image(self,image_path: str ,cordenadas: list):
         # Le a imagem
