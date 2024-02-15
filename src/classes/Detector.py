@@ -1,8 +1,8 @@
 from ultralytics import YOLO
 from PIL import Image, ImageDraw
-import os, cv2, easyocr
 from matplotlib import pyplot as plt
 from google.cloud import vision
+import os, cv2, re
 
 
 class Detector:
@@ -30,11 +30,30 @@ class Detector:
             self.cut_image(img_path, cordenadas)
             text = self.OCR()
 
-            # TODO: Verifica se o texto detectado está na máscara
-            
-            return (classe_id, text)
+            resultado = self.fix_txt(classe=classe_id, placa=text)
+
+            return (classe_id, resultado)
         
         return (-1, "Sem deteccoes")
+    
+
+
+    def fix_txt(self, classe : int, placa : str) -> str:
+
+        placa = ''.join(c for c in placa if c.isalnum()) #Remove caracteres que não sejam alfanuméricos
+
+        if classe == 1:
+            regex_mercosul = re.compile(r'^[A-Z]{3}\d[A-Z]\d{2}$')
+            if not regex_mercosul.match(placa):
+                pass
+        
+        else:
+            regex_br = re.compile(r'^[A-Z]{3}\d{4}$')
+            if not regex_br.match(placa):
+                pass
+        
+        return placa
+
 
     def OCR(self):
         client = vision.ImageAnnotatorClient()
