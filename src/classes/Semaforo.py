@@ -16,6 +16,9 @@ class Semaforo:
         GPIO.setup(self.__pins['rele_3'].number, GPIO.OUT)
         GPIO.setup(self.__pins['rele_4'].number, GPIO.OUT)
 
+        self.desligar_semaforo()
+
+    def desligar_semaforo(self) -> None:
         self.__pins['rele_3'].desligar()
         self.__pins['rele_4'].desligar()
 

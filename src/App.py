@@ -51,21 +51,20 @@ class App:
                 if classe != -1: # Se há detecção
                     self.regitrador.gravar_deteccao(resultado_placa) # Registra a placa
 
-                    semaforo_id = 1 if resultado_placa in self.placas_permitidas else 0
+                    if resultado_placa in self.placas_permitidas:
+                        self.semaforo.ligar_verde()
 
-                else:
-                    semaforo_id = 0
+                    else:
+                        self.semaforo.ligar_vermelho()
 
                 self.display.set_text(resultado_placa) # Exibe a placa no display
                 
-                # TODO: Aciona o semáforo
-
                 # Aguardar o led ser pressionado novamente
                 GPIO.wait_for_edge(self.__pins['button_main'].number, GPIO.RISING)
 
                 self.display.clean() # Limpa o display
 
-                # TODO: Apaga o semáforo
+                self.semaforo.desligar_semaforo() # Desliga o semáforo
 
             time.sleep(0.1)
 
