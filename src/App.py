@@ -36,20 +36,17 @@ class App:
                 
                 print('\ngatilho disparado!')
                 self.__pins['led_button_main'].desligar() #Desliga o led
+
                 self.__tirar_foto() # Captura a foto
 
                 classe, resultado_placa = self.detector.get_text(self.image_original_path)
-                print(resultado_placa)
 
                 self.display.set_text(resultado_placa)
 
-                entrada = input("aperte qualquer tecla para continuar?")
                 self.display.clean()
 
             time.sleep(0.1)
 
-            if entrada == 'fim': # TODO: Remover
-                break
 
         GPIO.cleanup()
         print("APP Finalizado!")

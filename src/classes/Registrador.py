@@ -12,9 +12,17 @@ class Registrador:
         self.delete_old_files()
         self.check_file()
 
+    def gravar_deteccao(self, placa: str) -> None:
+        file = open(self.filename, 'a')
+
+        horario = arrow.now().format('YYYY-MM-DD HH:mm:ss')
+        file.write(f"{placa},{horario}\n")
+
+        file.close()
+
     def check_file(self) -> None:
         data_atual = date.today()
-        self.filename = f"{os.getenv('REGISTROS_PATH')}/Registro-Placas-{data_atual}.xlsx"
+        self.filename = f"{os.getenv('REGISTROS_PATH')}/Registro-Placas-{data_atual}.csv"
 
         if Path(self.filename).exists():
             print(f"O arquivo {self.filename} já existe.")
@@ -33,3 +41,5 @@ class Registrador:
 
 if __name__ == "__main__":
     registrador = Registrador()
+
+    registrador.gravar_deteccao('teste')
