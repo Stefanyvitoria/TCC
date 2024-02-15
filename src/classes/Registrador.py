@@ -18,7 +18,11 @@ class Registrador:
         horario = arrow.now().format('YYYY-MM-DD HH:mm:ss')
         file.write(f"{placa},{horario}\n")
 
+        print(f"gravando {placa},{horario} no arquivo {self.filename}")
+
         file.close()
+
+
 
     def check_file(self) -> None:
         data_atual = date.today()
@@ -31,12 +35,14 @@ class Registrador:
             print(f"Arquivo {self.filename} criado com sucesso!")
 
 
+
     def delete_old_files(self) -> None:
         tempo_maximo = arrow.now().shift(days=-int(os.getenv('DIAS_MAX_PERMANENCIA')))
 
         for item in Path(os.getenv('REGISTROS_PATH')).glob('*'):
             if item.is_file() and arrow.get(item.stat().st_mtime) < tempo_maximo:
                 item.unlink()
+
 
 
 if __name__ == "__main__":

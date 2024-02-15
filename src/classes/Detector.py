@@ -29,9 +29,12 @@ class Detector:
             self.draw_bounding_box(img_path, cordenadas)
             self.cut_image(img_path, cordenadas)
             text = self.OCR()
+
+            # TODO: Verifica se o texto detectado está na máscara
+            
             return (classe_id, text)
         
-        return (-1, "Sem detecções")
+        return (-1, "Sem deteccoes")
 
     def OCR(self):
         client = vision.ImageAnnotatorClient()

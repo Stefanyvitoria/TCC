@@ -4,6 +4,7 @@ from src.classes.GPIO_PIN import Pin_Button
 from src.classes.Detector import Detector
 from src.classes.Display import Display
 from src.classes.Semaforo import Semaforo
+from src.classes.Registrador import Registrador
 from dotenv import load_dotenv
 
 load_dotenv() # Carrega as variáveis de ambiente do arquivo .env
@@ -15,6 +16,7 @@ class App:
         self.detector = Detector()
         self.display = Display()
         self.semaforo = Semaforo()
+        self.regitrador = Registrador()
         self.__pins = {
             'button_main': Pin_Button(int(os.getenv('PIN_NUMBER_BUTTON_MAIN'))),
             'led_button_main':Pin_Button(int(os.getenv('PIN_NUMBER_LED_BUTTON_MAIN')))
@@ -26,30 +28,36 @@ class App:
 
     def run(self) -> None:
 
-        entrada = '' # TODO: Remover
         print("APP inicializado!")
+        self.display.clean()
+
         while True:
-            self.__pins['led_button_main'].ligar() # acende o led led de processamento
+            self.__pins['led_button_main'].ligar() # acende o led que indica processamento
     
             # Se houver evento e for uma acionada no botão
             if GPIO.wait_for_edge(self.__pins['button_main'].number, GPIO.RISING):
                 
                 print('\ngatilho disparado!')
+
                 self.__pins['led_button_main'].desligar() #Desliga o led
 
                 self.__tirar_foto() # Captura a foto
 
-                classe, resultado_placa = self.detector.get_text(self.image_original_path)
+                classe, resultado_placa = self.detector.get_text(self.image_original_path) # Realiza a detecção da placa
 
-                self.display.set_text(resultado_placa)
+                if classe != -1: # Se há detecção
+                    self.regitrador.gravar_deteccao(resultado_placa) # Regitsra a placa
+
+                self.display.set_text(resultado_placa) # Exibe a placa no display
+                
+                # TODO: Aciona o semáforo
+
+                # TODO: Aguardar o led ser pressionado
+                GPIO.wait_for_edge(self.__pins['button_main'].number, GPIO.RISING)
 
                 self.display.clean()
 
             time.sleep(0.1)
-
-
-        GPIO.cleanup()
-        print("APP Finalizado!")
 
 
     def __tirar_foto(self) -> None:
