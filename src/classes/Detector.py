@@ -45,7 +45,6 @@ class Detector:
         image = vision.Image(content=content)
         response = client.text_detection(image=image)
 
-        print(response)
 
         txt = response.full_text_annotation.text
 

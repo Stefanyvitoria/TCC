@@ -21,7 +21,9 @@ class App:
             'button_main': Pin_Button(int(os.getenv('PIN_NUMBER_BUTTON_MAIN'))),
             'led_button_main':Pin_Button(int(os.getenv('PIN_NUMBER_LED_BUTTON_MAIN')))
         }
+        self.placas_permitidas = []
 
+        self.get_placas_permitidas()
         self.__configuracoes_pins()
         self.run()
 
@@ -43,22 +45,37 @@ class App:
 
                 self.__tirar_foto() # Captura a foto
 
-                classe, resultado_placa = self.detector.get_text(self.image_original_path) # Realiza a detecção da placa
+                # Realiza a detecção da placa
+                classe, resultado_placa = self.detector.get_text(self.image_original_path) 
 
                 if classe != -1: # Se há detecção
-                    self.regitrador.gravar_deteccao(resultado_placa) # Regitsra a placa
+                    self.regitrador.gravar_deteccao(resultado_placa) # Registra a placa
+
+                    semaforo_id = 1 if resultado_placa in self.placas_permitidas else 0
+
+                else:
+                    semaforo_id = 0
 
                 self.display.set_text(resultado_placa) # Exibe a placa no display
                 
                 # TODO: Aciona o semáforo
 
-                # TODO: Aguardar o led ser pressionado
+                # Aguardar o led ser pressionado novamente
                 GPIO.wait_for_edge(self.__pins['button_main'].number, GPIO.RISING)
 
-                self.display.clean()
+                self.display.clean() # Limpa o display
+
+                # TODO: Apaga o semáforo
 
             time.sleep(0.1)
 
+
+    def get_placas_permitidas(self) -> None:
+        file_placas_permitidas = open(os.getenv('PLACAS_PERMITIDAS_FILE'))
+
+        self.placas_permitidas = [x.strip() for x in file_placas_permitidas.readlines()]
+
+        file_placas_permitidas.close()
 
     def __tirar_foto(self) -> None:
         print("Capturando imagem.")
@@ -81,3 +98,4 @@ class App:
         GPIO.setup(self.__pins['led_button_main'].number, GPIO.OUT)
 
         print("GPIO configurada.")
+

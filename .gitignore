@@ -6,3 +6,5 @@ tcc_env
 __pycache__
 teste.py
 registros/*.csv
+placas_permitidas.txt
+.vscode
