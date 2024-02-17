@@ -1,0 +1,10 @@
+midias/*.png
+midias/*.jpg
+venv
+tcc_env
+.env
+__pycache__
+teste.py
+registros/*.csv
+placas_permitidas.txt
+.vscode

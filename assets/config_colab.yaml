@@ -1,0 +1,8 @@
+path: /content/drive/MyDrive/TCC/dataset # data set root directory
+train: images/train
+val: images/val
+
+# Classes
+names:
+  0: placa_carro_br
+  1: placa_carro_me
