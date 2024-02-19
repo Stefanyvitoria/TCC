@@ -1,1 +1,1 @@
-Contém arquivos com os registros das capturas realizadas no sistema.
+Este diretório contém os arquivos com os registros das capturas realizadas pelo sistema, cada arquivo no formato `Registro-Placas-[YYYY]-[MM]-[DD].csv` onde [YYYY] é o ano  com 04 dígitos, [MM] é o mês com 02 dígitos e [DD] é o dia com 02 dígitos, todas as datas são referentes a data de execução do app.
