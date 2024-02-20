@@ -29,30 +29,30 @@ class Detector:
             self.draw_bounding_box(img_path, cordenadas)
             self.cut_image(img_path, cordenadas)
             text = self.OCR()
-
             resultado = self.fix_txt(classe=classe_id, placa=text)
 
-            return (classe_id, resultado)
-        
+            if resultado == 0:
+                return (classe_id, resultado)
+
         return (-1, "Sem deteccoes")
     
 
 
-    def fix_txt(self, classe : int, placa : str) -> str:
+    def fix_txt(self, classe : int, placa : str) -> int:
 
         placa = ''.join(c for c in placa if c.isalnum()) #Remove caracteres que não sejam alfanuméricos
 
         if classe == 1:
             regex_mercosul = re.compile(r'^[A-Z]{3}\d[A-Z]\d{2}$')
             if not regex_mercosul.match(placa):
-                pass
+                return -1
         
         else:
             regex_br = re.compile(r'^[A-Z]{3}\d{4}$')
             if not regex_br.match(placa):
-                pass
+                return -1
         
-        return placa
+        return 0
 
 
     def OCR(self):

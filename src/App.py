@@ -53,18 +53,33 @@ class App:
 
                     if resultado_placa in self.placas_permitidas:
                         self.semaforo.ligar_verde()
-
                     else:
                         self.semaforo.ligar_vermelho()
 
-                self.display.set_text(resultado_placa) # Exibe a placa no display
-                
-                # Aguardar o led ser pressionado novamente
-                GPIO.wait_for_edge(self.__pins['button_main'].number, GPIO.RISING)
+                    self.display.set_text(resultado_placa) # Exibe a placa no display
+                    
+                    # Aguardar o led ser pressionado novamente
+                    GPIO.wait_for_edge(self.__pins['button_main'].number, GPIO.RISING)
 
-                self.display.clean() # Limpa o display
+                    self.display.clean() # Limpa o display
 
-                self.semaforo.desligar_semaforo() # Desliga o semáforo
+                    self.semaforo.desligar_semaforo() # Desliga o semáforo
+
+                else:
+                    self.display.set_text(resultado_placa) # Exibe a placa no display
+
+                    while True:
+
+                        # Faz o semáforo piscar
+                        self.semaforo.ligar_verde()
+                        time.sleep(0.1)
+                        self.semaforo.ligar_vermelho()
+                        time.sleep(0.1)
+
+                        if GPIO.input(self.__pins['button_main'].number) == False:
+                            self.display.clean()
+                            self.semaforo.desligar_semaforo()
+                            break
 
             time.sleep(0.1)
 
