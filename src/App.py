@@ -32,18 +32,26 @@ class App:
 
         print("APP inicializado!")
         self.display.clean()
+        desligar = False
 
         while True:
+            gatilho = False
+            
             self.__pins['led_button_main'].ligar() # acende o led que indica processamento
-    
-            # Se houver evento e for uma acionada no botão
-            if GPIO.wait_for_edge(self.__pins['button_main'].number, GPIO.RISING):
-                
-                print('\ngatilho disparado!')
 
+            start_time = time.time()
+            while GPIO.input(self.__pins['button_main'].number) == GPIO.LOW:
+                gatilho = True
+                time.sleep(0.1)
+                if time.time() - start_time >= 3.0:
+                    desligar = True
+                    print("Botão pressionado por 3 segundos ou mais! Desligando...")
+                    break
+            
+            if gatilho and (not desligar):
                 self.__pins['led_button_main'].desligar() #Desliga o led
 
-                self.__tirar_foto() # Captura a foto
+                # self.__tirar_foto() # Captura a foto
 
                 # Realiza a detecção da placa
                 classe, resultado_placa = self.detector.get_text(self.image_original_path) 
@@ -81,6 +89,12 @@ class App:
                             self.semaforo.desligar_semaforo()
                             break
 
+            elif desligar:
+                print("\nResetando canais da GPIO...")
+                GPIO.cleanup() # Desativa possíveis canais ativos
+                print("GPIO Resetada.")
+                break
+
             time.sleep(0.1)
 
 
@@ -105,8 +119,7 @@ class App:
         GPIO.setmode(GPIO.BCM)
 
         # Configura o pino como entrada
-        GPIO.setup(self.__pins['button_main'].number, GPIO.IN, pull_up_down=GPIO.PUD_UP) #PUD_UP PUD_DOWN
-        GPIO.add_event_detect(self.__pins['button_main'].number, GPIO.RISING)
+        GPIO.setup(self.__pins['button_main'].number, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
         #configura o pino como saída
         GPIO.setup(self.__pins['led_button_main'].number, GPIO.OUT)
