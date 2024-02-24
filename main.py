@@ -6,6 +6,7 @@ Descrição: Script principal da aplicação.
 
 from src.App import App
 import RPi.GPIO as GPIO
+import subprocess
 
 try:
     App()
@@ -16,4 +17,7 @@ except (Exception, KeyboardInterrupt) as e:
     print("\nResetando canais da GPIO...")
     GPIO.cleanup() # Desativa possíveis canais ativos
     print("GPIO Resetada.")
+finally:
+    subprocess.run("sudo shutdown -h now", shell=True)
+
 

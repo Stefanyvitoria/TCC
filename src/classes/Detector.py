@@ -31,28 +31,29 @@ class Detector:
             text = self.OCR()
             resultado = self.fix_txt(classe=classe_id, placa=text)
 
-            if resultado == 0:
-                return (classe_id, resultado)
+            if resultado[0] == 0:
+                return (classe_id, resultado[1])
 
         return (-1, "Sem deteccoes")
     
 
 
-    def fix_txt(self, classe : int, placa : str) -> int:
+    def fix_txt(self, classe : int, placa : str) -> str:
 
         placa = ''.join(c for c in placa if c.isalnum()) #Remove caracteres que não sejam alfanuméricos
+        return_no = 0
 
         if classe == 1:
             regex_mercosul = re.compile(r'^[A-Z]{3}\d[A-Z]\d{2}$')
             if not regex_mercosul.match(placa):
-                return -1
+                return_no = -1
         
         else:
             regex_br = re.compile(r'^[A-Z]{3}\d{4}$')
             if not regex_br.match(placa):
-                return -1
+                return_no = -1
         
-        return 0
+        return (return_no,placa)
 
 
     def OCR(self):

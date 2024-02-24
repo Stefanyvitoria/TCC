@@ -8,15 +8,15 @@ class Pin_Button:
         self.pin_type = pin_type
 
     def ligar(self)-> None:
-        print(f"Ligando pin {self.number}")
         self.ativo = True
         if self.pin_type == 'in':
             GPIO.output(self.number, self.ativo)
         else: 
             GPIO.output(self.number, not self.ativo)
 
+
+
     def desligar(self)-> None:
-        print(f"Desligando pin {self.number}")
         self.ativo = False
         if self.pin_type == 'in':
             GPIO.output(self.number, self.ativo)
