@@ -11,9 +11,11 @@ Este projeto é um sistema que tem como objetivo auxiliar acesso de veículos na
 Para o funcionamento do projeto, além do hardware necessário (descrito no artigo referenciado acima) é preciso que o sistema possua:
 
 - Python 3
-- CLI gcloud
+- <a href = "https://cloud.google.com/vision/docs/ocr?hl=pt-br#detect_text_in_a_local_image">CLI gcloud</a>
 
-O projeto possui um arquivo com suas dependências:
+
+
+O projeto possui um arquivo com seus requesitos de pacotes python:
 
 - <a href = "https://github.com/Stefanyvitoria/TCC/blob/master/requirements.txt">./requirements.txt</a>
 
