@@ -51,7 +51,7 @@ class App:
             if gatilho and (not desligar):
                 self.__pins['led_button_main'].desligar() #Desliga o led
 
-                # self.__tirar_foto() # Captura a foto
+                self.__tirar_foto() # Captura a foto
 
                 # Realiza a detecção da placa
                 classe, resultado_placa = self.detector.get_text(self.image_original_path) 
