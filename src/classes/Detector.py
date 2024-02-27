@@ -19,7 +19,6 @@ class Detector:
 
         # Detecta as placas na imagem
         results = self.detector_LP(img)[0]
-        # print(results)
         
         if len(results.boxes.data.tolist()) > 0:
             results_data = results.boxes.data.tolist()[0]
@@ -35,7 +34,7 @@ class Detector:
                 return (classe_id, resultado[1])
 
         return (-1, "Sem deteccoes")
-    
+
 
 
     def fix_txt(self, classe : int, placa : str) -> str:
@@ -65,8 +64,8 @@ class Detector:
         image = vision.Image(content=content)
         response = client.text_detection(image=image)
 
-
         txt = response.full_text_annotation.text
+        txt = txt.split('\n')[-1] #Ignorando local da placa, como "BRASIL" ou "PE-RECIFE" que saem na primeira linha
 
         if response.error.message:
             raise Exception(
